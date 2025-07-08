@@ -1,0 +1,188 @@
+# Build directories
+build/
+out/
+Debug/
+Release/
+x64/
+x86/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.vcxproj.user
+*.vcxproj.filters
+*.vcxproj.userprefs
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+WIMEEditorCPP
+WIMEEditorCPP.exe
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+.cmake/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Visual Studio
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+*.vcxproj.userprefs
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.VC.db
+*.VC.opendb
+*.VC.VC.opendb
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# CLion
+.idea/
+cmake-build-*/
+
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+*.xcuserstate
+*.xcuserdata/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# Dependency directories
+vcpkg_installed/
+conan/
+conanbuildinfo.txt
+conaninfo.txt
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.tlog
+
+# Package files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Profiling and debugging
+*.prof
+*.gcov
+*.gcda
+*.gcno
+*.gdb
+*.core
+*.stackdump
+
+# Valgrind
+valgrind-out.txt
+
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
+coverage/
+htmlcov/
+
+# Documentation build
+docs/_build/
+docs/build/
+
+# Test artifacts
+test_results/
+coverage/
+*.test
+*.test.exe
+
+# Custom project specific
+*.res
+*.dat
+*.cfg
+config.ini
+settings.json 
