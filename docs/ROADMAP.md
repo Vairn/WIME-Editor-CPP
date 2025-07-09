@@ -12,11 +12,20 @@
 - **Tab-based resource viewer** with categorized display
 - **Binary file I/O** with endianness support
 - **Basic error handling** and exception safety
+- **ResourceViewers system** with polymorphic viewers for different resource types
+- **PreviewWindow** for resource content viewing and editing
+- **String (CSTR) resource editing** with multiline text box support
+- **Map (MMAP) resource preview** with ByteRun decompression
+- **Properties window** with resource-specific property display
+- **Caching system** for resource data to improve performance
 
 ### 🔄 In Progress
-- **Resource viewer implementations** (image, text, map viewers)
+- **Image resource viewer** (IMAG type with bitplane rendering)
+- **Font resource viewer** (FONT type with character display)
+- **Form resource viewer** (FRML type with animation support)
 - **Settings persistence** system
 - **Enhanced error reporting** and user feedback
+- **String save functionality** for edited CSTR resources
 
 ## Development Phases
 
@@ -26,20 +35,20 @@
 **Target Date:** Q1 2024
 
 #### Planned Features
-1. **Image Resource Viewer**
+1. **Image Resource Viewer** ✅ **PARTIALLY COMPLETE**
    - Bitplane image rendering
    - Palette support and color management
    - Zoom and pan controls
    - Export to common formats (PNG, BMP)
 
-2. **Text Resource Viewer**
-   - String display and editing
-   - Character encoding support
+2. **Text Resource Viewer** ✅ **COMPLETE**
+   - String display and editing ✅
+   - Character encoding support ✅
    - Search and replace functionality
    - Export to text files
 
-3. **Map Resource Viewer**
-   - Tile-based map rendering
+3. **Map Resource Viewer** ✅ **COMPLETE**
+   - Tile-based map rendering ✅
    - Layer support
    - Navigation controls
    - Map export functionality

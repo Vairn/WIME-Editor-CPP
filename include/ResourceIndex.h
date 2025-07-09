@@ -19,27 +19,28 @@ struct ResourceItem {
     uint32_t offset;
     uint32_t size;
     ResourceType type;
+    std::string sourceFile;  // The .res file this resource comes from
     
-    ResourceItem(const std::string& n = "", uint32_t off = 0, uint32_t sz = 0, ResourceType t = ResourceType::CHAR)
-        : name(n), offset(off), size(sz), type(t) {}
+    ResourceItem(const std::string& n = "", uint32_t off = 0, uint32_t sz = 0, ResourceType t = ResourceType::CHAR, const std::string& file = "")
+        : name(n), offset(off), size(sz), type(t), sourceFile(file) {}
 };
 
 class ResourceIndex {
 public:
     std::string ID;
-    std::vector<ResourceItem> items;
+    std::vector<std::shared_ptr<ResourceItem>> items;
     
     ResourceIndex() = default;
     ResourceIndex(const std::string& id) : ID(id) {}
     
-    void AddItem(const std::string& name, uint32_t offset, uint32_t size, ResourceType type) {
-        items.emplace_back(name, offset, size, type);
+    void AddItem(const std::string& name, uint32_t offset, uint32_t size, ResourceType type, const std::string& sourceFile = "") {
+        items.emplace_back(std::make_shared<ResourceItem>(name, offset, size, type, sourceFile));
     }
     
-    std::vector<ResourceItem> GetItemsByType(ResourceType type) const {
-        std::vector<ResourceItem> result;
+    std::vector<std::shared_ptr<ResourceItem>> GetItemsByType(ResourceType type) const {
+        std::vector<std::shared_ptr<ResourceItem>> result;
         for (const auto& item : items) {
-            if (item.type == type) {
+            if (item->type == type) {
                 result.push_back(item);
             }
         }
@@ -49,7 +50,7 @@ public:
     size_t GetItemCount(ResourceType type) const {
         size_t count = 0;
         for (const auto& item : items) {
-            if (item.type == type) count++;
+            if (item->type == type) count++;
         }
         return count;
     }

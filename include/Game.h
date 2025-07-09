@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <functional>
 #include "FileFormat.h"
 #include "BinaryFile.h"
 #include "ResourceIndex.h"
@@ -29,8 +30,13 @@ public:
     bool LoadGame(const std::string& filePath);
     void UnloadGame();
     
+    // Debug callback
+    static void SetDebugCallback(std::function<void(const std::string&)> callback);
+    
 private:
     bool InitializeGameData(const std::string& filePath);
     GameFormat DetectFormat(const std::string& filePath, BinaryFile& file);
     void LoadRealResources(const std::string& gamePath);
+    
+    static std::function<void(const std::string&)> debugCallback;
 }; 

@@ -17,6 +17,24 @@ The WIME Editor C++ follows a modular architecture designed for cross-platform c
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
+│                   UI Layer                                 │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
+│  │ EditorUI    │  │PropertiesWin│  │PreviewWindow│      │
+│  │ (Manager)   │  │ (Metadata)  │  │ (Content)   │      │
+│  └─────────────┘  └─────────────┘  └─────────────┘      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                Resource Viewers Layer                      │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
+│  │StringViewer │  │MapViewer    │  │BinaryViewer │      │
+│  │ (CSTR)      │  │ (MMAP)      │  │ (Generic)   │      │
+│  └─────────────┘  └─────────────┘  └─────────────┘      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
 │                   Core Game Logic                          │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐      │
 │  │    Game     │  │ ResourceIndex│  │FileFormat   │      │
@@ -158,7 +176,62 @@ class BinaryFile {
 File Header → Resource Identifiers → Resource Maps → Resource Data
 ```
 
-### 4. Platform Abstraction
+### 4. UI Layer
+
+#### EditorUI (`EditorUI.h`, `EditorUI.cpp`)
+**Responsibilities:**
+- Main application UI coordination
+- Window management and docking
+- Resource selection handling
+- Menu and toolbar management
+
+**Key Design Patterns:**
+- **Facade Pattern**: Simplified interface to UI components
+- **Observer Pattern**: Resource selection events
+- **Factory Pattern**: Window creation and management
+
+#### PropertiesWindow (`PropertiesWindow.h`, `PropertiesWindow.cpp`)
+**Responsibilities:**
+- Resource metadata display
+- Resource-specific property viewing
+- Caching system for performance
+
+**Key Design Patterns:**
+- **Strategy Pattern**: Resource-specific property display
+- **Cache Pattern**: Resource data caching
+- **Observer Pattern**: Resource selection updates
+
+#### PreviewWindow (`PreviewWindow.h`, `PreviewWindow.cpp`)
+**Responsibilities:**
+- Resource content viewing and editing
+- String resource editing with multiline support
+- Map resource preview with decompression
+- Independent window management
+
+**Key Design Patterns:**
+- **Strategy Pattern**: Resource-specific content viewing
+- **State Pattern**: Window open/close state management
+- **Observer Pattern**: Resource content updates
+
+### 5. Resource Viewers Layer
+
+#### ResourceViewers System (`ResourceViewers.h`, `ResourceViewers.cpp`)
+**Responsibilities:**
+- Polymorphic resource viewing
+- Type-specific rendering and editing
+- Caching and performance optimization
+
+**Key Design Patterns:**
+- **Strategy Pattern**: Different viewers for different resource types
+- **Factory Pattern**: Viewer creation based on resource type
+- **Template Method**: Common viewer interface
+
+**Implemented Viewers:**
+- **StringResourceViewer**: CSTR resource display and editing
+- **MapResourceViewer**: MMAP resource decompression and grid display
+- **BinaryResourceViewer**: Generic hex dump for other resource types
+
+### 6. Platform Abstraction
 
 #### File Dialog (`FileDialog.h`, `FileDialog.cpp`)
 **Responsibilities:**

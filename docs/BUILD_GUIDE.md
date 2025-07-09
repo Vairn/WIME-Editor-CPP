@@ -43,6 +43,14 @@ The project uses CPM.cmake for automatic dependency management:
 - **ImGui (docking branch)**: Immediate mode GUI
 - **portable-file-dialogs**: Cross-platform native file dialogs
 
+### Project Components
+- **BinaryFile**: Cross-platform binary I/O with endianness support
+- **ResourceLoader**: WIME resource file parsing and indexing
+- **ResourceViewers**: Polymorphic system for resource-specific viewing
+- **PreviewWindow**: Resource content viewing and editing
+- **PropertiesWindow**: Resource metadata display
+- **EditorUI**: Main application interface and window management
+
 ### Dependency Details
 
 #### GLFW

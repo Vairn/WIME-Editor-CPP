@@ -198,6 +198,140 @@ private:
     static ResourceHeader ReadResourceHeader(BinaryFile& file, Endianness endian);
     static std::vector<ResourceIdentifier> ReadResourceIdentifiers(
         BinaryFile& file, uint32_t filePointer, Endianness endian);
+```
+
+### 4. ResourceViewers System
+
+**Files:** `include/ResourceViewers.h`, `src/ResourceViewers.cpp`
+
+**Purpose:** Provides specialized viewers for different resource types, enabling type-specific rendering and editing capabilities.
+
+#### Architecture
+
+The ResourceViewers system uses a polymorphic design with a base `ResourceViewer` class and specialized implementations for each resource type:
+
+```cpp
+// Base class for all resource viewers
+class ResourceViewer {
+public:
+    virtual ~ResourceViewer() = default;
+    virtual void Render() = 0;
+    virtual void SetResource(const std::shared_ptr<ResourceItem>& resource) = 0;
+    virtual void SetGameFilePath(const std::string& filePath) = 0;
+    virtual void ClearCache() = 0;
+};
+```
+
+#### Implemented Viewers
+
+**StringResourceViewer (CSTR)**
+- Displays string content with character analysis
+- Shows printable characters and hex codes for non-printable
+- Handles newline conversion (byte 10 → '\n')
+
+**MapResourceViewer (MMAP)**
+- Decompresses ByteRun-encoded map data
+- Displays map properties (2560x1584 pixels, 160x99 tile grid)
+- Shows decompressed map data as a preview grid
+- Handles MMAP-specific data offsets (offset+8, size-18)
+
+**BinaryResourceViewer (Generic)**
+- Provides hex dump for binary resources
+- Shows ASCII representation alongside hex values
+- Handles all other resource types (CHAR, FONT, FRML, IMAG, etc.)
+
+#### Factory Function
+
+```cpp
+std::unique_ptr<ResourceViewer> CreateResourceViewer(ResourceType type);
+```
+
+Creates the appropriate viewer based on resource type:
+- `ResourceType::CSTR` → `StringResourceViewer`
+- `ResourceType::MMAP` → `MapResourceViewer`
+- All others → `BinaryResourceViewer`
+
+#### Usage Examples
+
+```cpp
+// Create a viewer for a string resource
+auto viewer = CreateResourceViewer(ResourceType::CSTR);
+viewer->SetResource(resourceItem);
+viewer->SetGameFilePath(gamePath);
+viewer->Render(); // Displays string content with analysis
+
+// Create a viewer for a map resource
+auto mapViewer = CreateResourceViewer(ResourceType::MMAP);
+mapViewer->SetResource(mapResource);
+mapViewer->Render(); // Shows decompressed map grid
+```
+
+### 5. PreviewWindow Class
+
+**Files:** `include/PreviewWindow.h`, `src/PreviewWindow.cpp`
+
+**Purpose:** Provides a dedicated preview window for viewing and editing resource content, separate from the properties display.
+
+#### Features
+
+- **Resource-Specific Content**: Shows actual resource data (strings, maps, etc.) rather than just metadata
+- **String Editing**: CSTR resources display in an editable multiline text box
+- **Map Preview**: MMAP resources show decompressed map data as a grid
+- **Independent Windows**: Each preview window is self-contained and can be docked/moved
+- **Shared Instance**: Integrated into main UI as a shared window (like Properties)
+
+#### Class Interface
+
+```cpp
+class PreviewWindow {
+public:
+    PreviewWindow();
+    void SetResource(const std::shared_ptr<ResourceItem>& resource, 
+                    const std::string& gameFilePath);
+    void Render();
+    bool IsOpen() const;
+    void Close();
+    std::string GetTitle() const;
+};
+```
+
+#### String Editing Features
+
+- **Multiline Text Box**: Large editing area for string content
+- **Dirty State Tracking**: Shows when content has been modified
+- **Save Functionality**: Placeholder for writing changes back to file
+- **Newline Handling**: Converts byte 10 to '\n' for display
+
+#### Map Preview Features
+
+- **Decompression**: Handles ByteRun decompression of map data
+- **Grid Display**: Shows map data as a 160x99 tile grid
+- **Property Display**: Shows map dimensions, tile size, etc.
+- **Preview Limiting**: Shows first 10 rows, 20 columns for performance
+
+#### Usage
+
+```cpp
+// Create and configure preview window
+auto preview = std::make_unique<PreviewWindow>();
+preview->SetResource(resourceItem, gameFilePath);
+
+// Render the preview (called each frame)
+preview->Render();
+
+// Check if window is still open
+if (!preview->IsOpen()) {
+    // Window was closed by user
+}
+```
+
+#### Integration with Main UI
+
+The PreviewWindow is integrated into the main EditorUI:
+- Accessible via View → Preview menu
+- Updates automatically when resource selection changes
+- Can be docked, moved, and resized like other windows
+- Shares the same resource selection as the Properties window
     static std::vector<ResourceMap> ReadResourceMaps(
         BinaryFile& file, uint32_t keyPosition, uint16_t count, Endianness endian);
     

@@ -6,6 +6,12 @@
 #include <filesystem>
 #include <algorithm>
 
+std::function<void(const std::string&)> Game::debugCallback = nullptr;
+
+void Game::SetDebugCallback(std::function<void(const std::string&)> callback) {
+    debugCallback = callback;
+}
+
 static std::string ToLower(const std::string& str) {
     std::string out = str;
     std::transform(out.begin(), out.end(), out.begin(), ::tolower);
@@ -58,14 +64,21 @@ void Game::LoadRealResources(const std::string& gamePath) {
         std::filesystem::path gameFilePath(gamePath);
         std::string gameDir = gameFilePath.parent_path().string();
         
-        std::cout << "Looking for .res files in: " << gameDir << std::endl;
+        if (debugCallback) debugCallback("Looking for .res files in: " + gameDir);
         
-        // Look for .res files in the same directory
+        // Look for .res files in the same directory (case insensitive)
         std::vector<std::string> resourceFiles;
+        if (debugCallback) debugCallback("Scanning directory for resource files...");
         for (const auto& entry : std::filesystem::directory_iterator(gameDir)) {
-            if (entry.is_regular_file() && entry.path().extension() == ".res") {
+            if (entry.is_regular_file()) {
+                std::string filename = entry.path().filename().string();
+                std::string extension = ToLower(entry.path().extension().string());
+                if (debugCallback) debugCallback("Found file: " + filename + " (ext: " + extension + ")");
+                
+                if (extension == ".res" ) 
+                {
                 std::string resFile = entry.path().string();
-                std::cout << "Found resource file: " << resFile << std::endl;
+                if (debugCallback) debugCallback("Found resource file: " + resFile);
                 
                 // Try to load the resource file
                 auto loadedResource = ResourceLoader::LoadResourceFile(resFile, endian);
@@ -76,22 +89,23 @@ void Game::LoadRealResources(const std::string& gamePath) {
                     } else {
                         // Merge resources
                         for (const auto& item : loadedResource->items) {
-                            resource->AddItem(item.name, item.offset, item.size, item.type);
+                            resource->AddItem(item->name, item->offset, item->size, item->type, item->sourceFile);
                         }
                     }
-                    std::cout << "Successfully loaded resources from: " << resFile << std::endl;
+                    if (debugCallback) debugCallback("Successfully loaded resources from: " + resFile);
                 } else {
-                    std::cout << "Failed to load resources from: " << resFile << std::endl;
+                    if (debugCallback) debugCallback("Failed to load resources from: " + resFile);
+                }
                 }
             }
         }
         
         if (!resource) {
-            std::cout << "No valid resource files found, creating empty resource index" << std::endl;
+            if (debugCallback) debugCallback("No valid resource files found, creating empty resource index");
             resource = std::make_unique<ResourceIndex>("WIME");
         }
         
-        std::cout << "Total resources loaded: " << resource->items.size() << std::endl;
+        if (debugCallback) debugCallback("Total resources loaded: " + std::to_string(resource->items.size()));
         
     } catch (const std::exception& e) {
         std::cerr << "Error loading real resources: " << e.what() << std::endl;
@@ -116,7 +130,7 @@ bool Game::InitializeGameData(const std::string& filePath) {
             case GameFormat::AtariST: formatStr = "Atari ST"; break;
             default: formatStr = "Unknown"; break;
         }
-        std::cout << "Detected game format: " << formatStr << std::endl;
+        if (debugCallback) debugCallback("Detected game format: " + formatStr);
         
         // Load real resources from .res files
         LoadRealResources(filePath);

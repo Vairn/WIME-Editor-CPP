@@ -51,11 +51,18 @@ set(SOURCES
     src/FileDialog.cpp
     src/BinaryFile.cpp
     src/ResourceLoader.cpp
+    src/EditorUI.cpp
+    src/GameInfoWindow.cpp
+    src/ResourceBrowserWindow.cpp
+    src/PropertiesWindow.cpp
+    src/ResourceViewers.cpp
+    src/PreviewWindow.cpp
+    src/ConsoleWindow.cpp
 )
 
 add_executable(WIMEEditorCPP ${SOURCES})
 
-target_include_directories(WIMEEditorCPP PRIVATE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends include)
+target_include_directories(WIMEEditorCPP PRIVATE ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends include src)
 target_link_libraries(WIMEEditorCPP PRIVATE glfw imgui_lib)
 
 # For Windows: link OpenGL
